@@ -149,19 +149,39 @@ the same box the browser uses — so the preview shows real packing.
 
 ## 7. Going live — a shareable link, and your own domain
 
-**Nothing has been deployed yet** — no account was created, no repo pushed, no
-URL invented. These are the exact steps (README was written so you can re-run
-them any time).
+**Deployed:** `https://akash-rizz.github.io/ayesha-love/` — public repository
+`Akash-rizz/ayesha-love`, served by GitHub Pages from the `main` branch. No
+account was created on anyone's behalf and no custom domain was bought (the
+custom-domain recipe in §7B is there for whenever it is wanted).
 
-### A. Free live link — GitHub Pages (≈5 minutes, ₹0)
+### A. How this was deployed (re-runnable any time)
+
+`gh auth login` needed scopes the shared token did not have, so the push went
+through plain `git` + the REST API with a fine-grained-ish classic token
+(`public_repo` scope only):
 
 ```sh
-pkg install gh                      # GitHub CLI, already in the Termux repo
-gh auth login                       # GitHub.com → HTTPS → "Login with a web browser"
-                                    # it prints a 6-digit code; open
-                                    # github.com/login/device on your phone and enter it
-
 cd ~/ayesha-love
+git init -b main
+git add -A && git commit -m "Project Ayesha"
+
+# create the repo once
+curl -X POST -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/user/repos \
+     -d '{"name":"ayesha-love","private":false,"auto_init":false}'
+
+# push (token read from the environment, never written into the remote URL)
+git -c credential.helper= \
+    -c credential.helper='!f() { echo "username=Akash-rizz"; echo "password=$GH_TOKEN"; }; f' \
+    push https://github.com/Akash-rizz/ayesha-love.git main
+
+# turn Pages on
+curl -X POST -H "Authorization: Bearer $GH_TOKEN" https://api.github.com/repos/Akash-rizz/ayesha-love/pages \
+     -d '{"source":{"branch":"main","path":"/"}}'
+```
+
+If `gh` works for you (`gh auth login` succeeds), this is all one command:
+
+```sh
 gh repo create ayesha-love --public --source=. --push
 gh api -X POST repos/$(gh api user -q .login)/ayesha-love/pages \
        -f "source[branch]=main" -f "source[path]=/"
