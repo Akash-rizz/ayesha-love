@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="A small cinematic love letter — a private little universe for Ayesha.">
+  <meta name="theme-color" content="#080708">
+  <meta name="color-scheme" content="dark">
+  <title>A Little Something for You, Ayesha &#9829;&#65039;</title>
+
+  <!-- Link preview: what people see when you share the URL in WhatsApp,
+       iMessages, X, Discord or Google. `og:image` is relative on purpose —
+       swap it for the full URL once the site is live (see README §7). -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Project Ayesha">
+  <meta property="og:title" content="I Love You, Ayesha &#10084;&#65039;">
+  <meta property="og:description" content="A little cinematic love letter — a private little universe.">
+  <meta property="og:image" content="assets/share-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="I Love You, Ayesha &#10084;&#65039;">
+  <meta name="twitter:description" content="A little cinematic love letter — a private little universe.">
+  <meta name="twitter:image" content="assets/share-card.png">
+
+  <!-- Favicon: an outlined heart, inline so nothing extra has to be deployed -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080708'/%3E%3Cpath d='M16 27C5 19.5 3 14.5 3 10.5A6 6 0 0 1 16 7a6 6 0 0 1 13 3.5C29 14.5 27 19.5 16 27Z' fill='none' stroke='%23D89AA5' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23080708'/%3E%3Cpath d='M16 27C5 19.5 3 14.5 3 10.5A6 6 0 0 1 16 7a6 6 0 0 1 13 3.5C29 14.5 27 19.5 16 27Z' fill='%238E1830' stroke='%23D89AA5' stroke-width='1.6'/%3E%3C/svg%3E">
+
+  <!-- Optional web fonts. Loaded asynchronously so the page never waits on the
+       network: with no internet the site falls back to Georgia / system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" media="print" onload="this.media='all'"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap">
+  <noscript>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Graceful degradation: without JavaScript, skip the animated opening and
+       show the message + letter directly. -->
+  <noscript>
+    <style>
+      #opening-screen { display: none !important; }
+      #main-screen[hidden] { display: block !important; }
+      #letter-panel[hidden] { display: block !important; }
+      .reveal, .controls { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
+</head>
+
+<body>
+  <!-- Atmospheric background: slow crimson light + a veil of drifting motes -->
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient__glow ambient__glow--a"></span>
+    <span class="ambient__glow ambient__glow--b"></span>
+    <span class="ambient__vignette"></span>
+  </div>
+  <canvas id="bg-canvas" class="layer layer--bg" aria-hidden="true"></canvas>
+  <canvas id="fx-canvas" class="layer layer--fx" aria-hidden="true"></canvas>
+
+  <!-- =====================================================================
+       SCENE ONE — THE CINEMATIC OPENING
+       ===================================================================== -->
+  <section id="opening-screen" class="opening" aria-label="Opening">
+    <div class="opening__inner">
+      <p class="opening__eyebrow" id="js-eyebrow">A LITTLE SOMETHING FOR YOU</p>
+      <h1 class="opening__name">
+        <span id="js-name">Ayesha</span><span class="opening__dot" aria-hidden="true">.</span>
+      </h1>
+      <p class="opening__tagline" id="js-tagline">Some feelings deserve their own little universe.</p>
+      <button type="button" class="btn btn--primary" id="open-btn">
+        <span id="js-open-label">Open Your Surprise</span>
+        <span class="btn__mark" aria-hidden="true">&#9825;</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MAIN EXPERIENCE
+       ===================================================================== -->
+  <div id="main-screen" class="main" hidden tabindex="-1">
+    <div class="main__inner">
+
+      <!-- SCENE TWO — a heart made entirely of words -->
+      <section class="hero" aria-label="A heart made of words">
+        <div class="heart" id="heart">
+          <!-- Replaced by an inline SVG built from CONFIG.heart.phrases -->
+          <p class="heart__fallback">A heart made of words: I love you, Ayesha.</p>
+        </div>
+
+        <!-- SCENE THREE — the main love reveal -->
+        <div class="reveal" id="reveal">
+          <h2 class="reveal__title">
+            <span id="js-final-title">I Love You, Ayesha</span>
+            <span class="reveal__heart" id="js-final-heart">&#10084;&#65039;</span>
+          </h2>
+          <p class="reveal__sub">
+            <span id="js-final-sub">Made with love, just for you.</span>
+            <!-- The hidden easter egg: tap this tiny heart three times. -->
+            <button type="button" class="secret" id="secret-heart" aria-label="A tiny heart">&#9825;</button>
+          </p>
+        </div>
+
+        <div class="controls">
+          <button type="button" class="btn btn--ghost" id="replay-btn">
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+              <path d="M3 4v5h5"></path>
+            </svg>
+            <span>Replay</span>
+          </button>
+
+          <button type="button" class="btn btn--ghost" id="music-btn" aria-pressed="false">
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 18V5l11-2v13"></path>
+              <circle cx="6" cy="18" r="3"></circle>
+              <circle cx="17" cy="16" r="3"></circle>
+            </svg>
+            <span id="music-label">Music</span>
+          </button>
+        </div>
+
+        <p class="status" id="control-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <!-- SCENE FOUR — the secret love letter -->
+      <section class="letter" aria-labelledby="js-letter-invite">
+        <p class="letter__invite" id="js-letter-invite">A little note, just for you.</p>
+
+        <div class="envelope" id="envelope" aria-hidden="true">
+          <span class="envelope__paper"></span>
+          <span class="envelope__back"></span>
+          <span class="envelope__front"></span>
+          <span class="envelope__flap"></span>
+        </div>
+
+        <button type="button" class="btn btn--primary" id="letter-btn" aria-expanded="false" aria-controls="letter-panel">
+          <span id="js-letter-open">Open Your Letter</span>
+        </button>
+
+        <div class="letter__panel" id="letter-panel" hidden>
+          <article class="paper" id="letter-paper" tabindex="-1" aria-label="A letter for Ayesha">
+            <span class="paper__seal" aria-hidden="true">&#9825;</span>
+            <p class="paper__body" id="js-letter-body">Ayesha,<br><br>This little corner of the internet was created just to make you smile. I hope it brings a little warmth to your day and reminds you that you are special.<br><br>With love,<br>&#10084;&#65039;</p>
+            <button type="button" class="btn btn--ghost paper__close" id="letter-close">
+              <span id="js-letter-close">Close Letter</span>
+            </button>
+          </article>
+        </div>
+      </section>
+
+      <p class="foot">A private little universe, made with love.</p>
+    </div>
+  </div>
+
+  <!-- SCENE FIVE — the hidden easter egg -->
+  <dialog class="egg" id="egg-dialog" aria-labelledby="js-egg-kicker">
+    <div class="egg__inner">
+      <span class="egg__mark" aria-hidden="true">&#10084;&#65039;</span>
+      <p class="egg__kicker" id="js-egg-kicker">One more little thing...</p>
+      <p class="egg__msg" id="js-egg-msg">I Love You, Ayesha &#10084;&#65039;</p>
+      <button type="button" class="btn btn--ghost" id="egg-close">Close</button>
+    </div>
+  </dialog>
+
+  <!-- Optional ambient music. Silent and OFF unless a real, properly licensed
+       file is added (see README.md and assets/audio/README.txt). -->
+  <audio id="music" loop preload="none"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
